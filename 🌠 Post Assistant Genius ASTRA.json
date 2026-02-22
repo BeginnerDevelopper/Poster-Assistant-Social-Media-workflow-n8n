@@ -646,7 +646,7 @@
             {
               "id": "b79af122-fba3-48cf-9020-58c994f9df0e",
               "name": "post_id",
-              "value": "={{ $now.toISO() }}",
+              "value": "={{ 'POST-' + $now.format('yyyyMMdd-HHmmss') }}",
               "type": "string"
             },
             {
