@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "path": "APPROVE",
+        "path": "approve",
         "responseMode": "responseNode",
         "options": {}
       },
