@@ -1,0 +1,1130 @@
+{
+  "name": "🌠 Post Assistant Genius ASTRA",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2208,
+        784
+      ],
+      "id": "04e37ef5-ef02-42c3-b1ce-0342174f74ba",
+      "name": "OpenAI Embeddings",
+      "credentials": {
+        "openAiApi": {
+          "id": "6oB1WcrnL1nJ1HjL",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🟣 PHASE 1 — TRIGGER\nSchedule every 3 days at 4AM (Jimmy Values)\nor trigger manually for testing.",
+        "height": 120,
+        "width": 400,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        6624,
+        992
+      ],
+      "id": "da83df21-96a0-48bc-a86c-33ef0a4ade8b",
+      "name": "Note Phase 1"
+    },
+    {
+      "parameters": {
+        "content": "## 🔵 PHASE 2 — VECTOR MEMORY + AI CONTENT AGENT\nAgent reads brand memory from Pinecone/Supabase,\ngenerates post (Title + Description + Hashtags)\nusing Genius Astra brand voice — no news needed.",
+        "height": 140,
+        "width": 520,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        7184,
+        992
+      ],
+      "id": "4967954a-f384-4021-af57-2e0e96c8fec8",
+      "name": "Note Phase 2"
+    },
+    {
+      "parameters": {
+        "content": "## 🟠 PHASE 3 — CANVA TEMPLATE\nUses Canva API to populate your branded\ntemplate with Title + Description.\nReturns a preview image URL.",
+        "height": 120,
+        "width": 336,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        7936,
+        992
+      ],
+      "id": "f85a7b76-6521-46d0-aadd-ed9662fc3df4",
+      "name": "Note Phase 3"
+    },
+    {
+      "parameters": {
+        "content": "## 🟡 PHASE 4 — APPROVAL VIA WHATSAPP\nSends preview image + caption to owner via\nWhatsApp (ManyChat number). Waits for webhook\nreply: APPROVE or REJECT.",
+        "height": 130,
+        "width": 440,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        8384,
+        1008
+      ],
+      "id": "d134b26d-4841-4f9f-a11e-2a987c70d9bc",
+      "name": "Note Phase 4"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 10 * * MON"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        6672,
+        1184
+      ],
+      "id": "d010466a-a956-49b9-b6c7-dd30dc1633e5",
+      "name": "🕓 Schedule — Every 3 Days 4AM"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Generate a brand-new Instagram post for Genius Astra. Follow the brand voice and memory context provided.  Today is {{ $now }}.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are the official content strategist and copywriter for **Genius Astra**, a digital automation agency based in Queens, NY.\n\n## BRAND IDENTITY\n- **Founded by Stephanny** — Values: Wake up at 4AM, take massive action, no excuses, build greatness through discipline and AI tools.\n- **Target audience**: Latino and local entrepreneurs in Queens/NY (restaurants, barbers, coaches, boutiques, gyms, clinics).\n- **Tone**: Motivational, professional, bilingual-friendly (Spanish with NY energy). Inspiring, direct, results-oriented.\n- **Specialty**: n8n automation workflows, AI agents, WhatsApp bots, Vapi voice AI, Canva automation, Instagram content.\n\n## YOUR TASK\nCreate a complete Instagram post that:\n1. Does NOT rely on news — instead, create evergreen, value-driven content about automation, AI, business growth.\n2. Shows the \"Before Chaos → After Automated\" transformation.\n3. Follows the Stephanny values framework: discipline, 4AM mindset, massive action.\n4. Includes a clear CTA: DM 'DEMO' for a free consultation.\n\n## CONTENT PILLARS (rotate between these):\n1. WhatsApp automation → never miss a lead again\n2. n8n workflows → your business runs while you sleep\n3. AI agents → 24/7 customer service without hiring\n4. Canva auto-posts → your brand stays consistent daily\n5. Vapi voice agents → answer calls automatically\n6. Stephanny's 4AM discipline → combined with AI tools\n7. Before/After transformation stories\n8. Local business success with automation\n\n## TIME CONSTRAINT\nYou must only consider AI in healthcare-related news or updates published within the last 3 days. Today is {{$now}}. Ignore any events, tools, or announcements older than that. Do not include historical context, outdated tools, or anything not explicitly mentioned in the last 72 hours. If no relevant news from the last 3 days is found, fall back to evergreen content from the CONTENT PILLARS above and continue normally.\n\n## OUTPUT — Return STRICT JSON only:\n{\n  \"title\": \"\",\n  \"description: \"\",\n  \"canva_title\": \"\",\n  \"canva_body\": \"\",\n  \"hashtags\": \"\"\n}\n\n## FORMATTING RULES\n- All content in Spanish\n- No emojis in canva_title or canva_body\n- No double quotes inside any string value\n- No line breaks inside JSON string values\n- Hashtags must be a single string (not an array)\n- No emojis in hashtags\n- Return ONLY the JSON block, nothing else\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        7152,
+        1184
+      ],
+      "id": "f8fa9940-3f53-45d1-b396-4aa6b6e95cba",
+      "name": "🤖 Genius Astra Content Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        6976,
+        1392
+      ],
+      "id": "6ee4bf25-388c-483f-b240-ceff269a7835",
+      "name": "OpenAI GPT-4o",
+      "credentials": {
+        "openAiApi": {
+          "id": "lYkSlH9mqRa7qRlz",
+          "name": "GameVevo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "personal",
+        "toolDescription": "Retrieves Genius Astra brand context, previous post ideas, content pillars, Jimmy values, and agency identity from vector memory. Use this before generating any content.",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "personal",
+          "mode": "list",
+          "cachedResultName": "personal"
+        },
+        "topK": 5,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.1,
+      "position": [
+        6800,
+        1568
+      ],
+      "id": "23f4e0a1-0313-4afb-9f68-8f03299d2f0d",
+      "name": "📚 Brand Memory (Pinecone)",
+      "credentials": {
+        "pineconeApi": {
+          "id": "CcI1VTfhQkX1kB6q",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY",
+          "mode": "list",
+          "cachedResultName": "Genius Astra Posts ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.output.title }}",
+            "Description": "={{ $json.output.description }}",
+            "Hashtags": "={{ $json.output.hashtags }}",
+            "Status": "in progress"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hashtags",
+              "displayName": "Hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        7536,
+        1184
+      ],
+      "id": "a578e52d-00f0-49e8-865f-12c4aa7dc4c6",
+      "name": "💾 Save Post to Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZVkYY5blo2ajMfxn",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 8
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        8016,
+        1184
+      ],
+      "id": "f120cc2b-57ea-4dbb-a59b-e003c16128ce",
+      "name": "⏳ Wait 8s for Canva",
+      "webhookId": "e79fe85a-edc6-4c6a-a4cb-bb7ba0898e92"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "personal",
+        "toolDescription": "SEARCH THIS TOOL FOR ALL QUESTIONS ABOUT GENIUS ASTRA\n\nThis knowledge base contains:\n- Complete service descriptions (WhatsApp AI agents, content creation, voice AI, n8n automation)\n- Detailed FAQ answers (how it works, pricing, plans, features)\n- Setup times (Basic: 1-2 days, Professional: 2-3 days)\n- Language support (Basic: 2 languages, Professional: 4, Advanced: 6)\n- Pricing information (monthly subscription, no long-term contract)\n- Target audience (local businesses, entrepreneurs in Queens NY)\n- What the assistant can do (answer questions, book appointments, work 24/7)\n- Business hours and availability information\n\nALWAYS search this tool when users ask:\n- \"How does it work?\"\n- \"What services do you offer?\"\n- \"How much does it cost?\"\n- \"What plans are available?\"\n- \"Can it book appointments?\"\n- Any question about features, pricing, or capabilities\n\nDO NOT answer from general knowledge - ALWAYS search Pinecone first.",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "personal",
+          "mode": "list",
+          "cachedResultName": "personal"
+        },
+        "topK": 20,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.1,
+      "position": [
+        10784,
+        1296
+      ],
+      "id": "e61aa663-0887-4741-895d-e0562ae08015",
+      "name": "📚 Memory Search (Chat Agent)",
+      "credentials": {
+        "pineconeApi": {
+          "id": "CcI1VTfhQkX1kB6q",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        10800,
+        1424
+      ],
+      "id": "c6ed91d1-d85d-4fa7-941b-5c7fafb5a075",
+      "name": "OpenAI Embeddings (Chat)",
+      "credentials": {
+        "openAiApi": {
+          "id": "lYkSlH9mqRa7qRlz",
+          "name": "GameVevo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"title\": \"\",\n  \"subtitle\": \"\",\n  \"description\": \"\",\n  \"canva_title\": \"\",\n  \"canva_body\": \"\",\n  \"hashtags\": \"\",\n  \"content_idea_log\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        7408,
+        1376
+      ],
+      "id": "397de6e7-af31-464c-903b-ad53620334c9",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "model": "sonar-pro",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        7264,
+        1376
+      ],
+      "id": "bb89dbec-0ea9-4200-aa0b-71a47eef7477",
+      "name": "Message a model in Perplexity",
+      "credentials": {
+        "perplexityApi": {
+          "id": "3q1g6dESqeNS02jK",
+          "name": "n8n_apikey"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": 20,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1z_Z0bqpX6CbTRSdqGQN58Rkz0qcmIcBg",
+            "mode": "list",
+            "cachedResultName": "post",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1z_Z0bqpX6CbTRSdqGQN58Rkz0qcmIcBg"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        9280,
+        1184
+      ],
+      "id": "4c25ede3-310e-4267-9052-1b328bf81594",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1orumzpHsqk1JUFJ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        9072,
+        1184
+      ],
+      "id": "ac09626e-c01b-4394-a7b3-078838a2c4a7",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        9488,
+        1184
+      ],
+      "id": "cb3a1354-21ce-4d32-a6dc-29281b2d2a6b",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1orumzpHsqk1JUFJ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        9680,
+        1184
+      ],
+      "id": "bb35c650-62bb-4011-b25f-de01729e3f6f",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "personal",
+          "mode": "list",
+          "cachedResultName": "personal"
+        },
+        "options": {
+          "pineconeNamespace": "default"
+        }
+      },
+      "id": "2bfa0fe6-48a7-411f-8688-93a6adeef37f",
+      "name": "Pinecone Vector Store1",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "position": [
+        9904,
+        1168
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "pineconeApi": {
+          "id": "CcI1VTfhQkX1kB6q",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "binaryMode": "specificField",
+        "options": {}
+      },
+      "id": "b7264b24-a680-4610-a62b-b06244a095a9",
+      "name": "Default Data Loader1",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        10016,
+        1328
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        9840,
+        1344
+      ],
+      "id": "f24f2d6d-0d86-47bf-8d2c-b83618b8a508",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "lYkSlH9mqRa7qRlz",
+          "name": "GameVevo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "928f1097-5f8f-495c-98e0-e12f1782d66e",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        10064,
+        1456
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.questions }}",
+        "options": {
+          "systemMessage": "=You are the AI assistant for Genius Astra, an AI automation agency.\n\nYOUR KNOWLEDGE BASE:\nAll information about Genius Astra is stored in the Pinecone vector store. This includes:\n- Services offered (WhatsApp AI agents, content creation, voice AI, n8n automation)\n- Pricing plans (Basic, Professional, Advanced)\n- FAQ answers\n- How the services work\n- Target audience information\n\nYOUR INSTRUCTIONS:\n1. ALWAYS search the Pinecone vector store FIRST before answering ANY question about:\n   - How Genius Astra works\n   - Services offered\n   - Pricing and plans\n   - Features and capabilities\n   - FAQ questions\n   - Setup times\n   - Languages supported\n\n2. Use the information from Pinecone to provide SPECIFIC, DETAILED answers\n\n3. If you don't find specific information in Pinecone, say: \"I don't have that specific information in our database, but I can help you with...\"\n\n4. Be helpful, professional, and concise\n\n5. Respond in the same language the user asks (English or Spanish)\n\nEXAMPLE:\nUser: \"How does Genius Astra work?\"\n→ Search Pinecone for \"how it works\", \"services\", \"WhatsApp agent\"\n→ Provide specific information from the knowledge base"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        10576,
+        1072
+      ],
+      "id": "c51cf060-f195-46e1-9f0d-afc1c2315704",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "responsesApiEnabled": "={{ true }}",
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        10448,
+        1280
+      ],
+      "id": "4ac1f079-d81d-4e30-991f-7392991042dc",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "lYkSlH9mqRa7qRlz",
+          "name": "GameVevo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "retrieveTemplate",
+        "templateId": {
+          "__rl": true,
+          "value": "e1bf2146-6bcc-45c4-b30d-97b2cd48520f",
+          "mode": "list",
+          "cachedResultName": "template1"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-templated.templatedTool",
+      "typeVersion": 1,
+      "position": [
+        10608,
+        1312
+      ],
+      "id": "c0d0869c-966e-46c8-99af-de5917972ca6",
+      "name": "Templated",
+      "credentials": {
+        "templatedApi": {
+          "id": "mR7YtmkAiX9aSkUm",
+          "name": "Templated account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "template": {
+          "__rl": true,
+          "value": "493c6913-8d63-4db9-bb74-c5f765d882fe",
+          "mode": "list",
+          "cachedResultName": "genius_template"
+        },
+        "layers": {
+          "layer": [
+            {
+              "layerName": "main-title",
+              "text": "={{ $('🤖 Genius Astra Content Agent').item.json.output.canva_title }}",
+              "additionalProperties": {}
+            },
+            {
+              "layerName": "body_text",
+              "text": "={{ $('🤖 Genius Astra Content Agent').item.json.output.canva_body }}",
+              "additionalProperties": {}
+            }
+          ]
+        },
+        "additionalOptions": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-templated.templated",
+      "typeVersion": 1,
+      "position": [
+        7776,
+        1184
+      ],
+      "id": "9cecf241-6b01-42fe-9f15-5404d4c9090c",
+      "name": "TemplatedAI",
+      "credentials": {
+        "templatedApi": {
+          "id": "RWVdQyHgDoNH1Uwr",
+          "name": "Templated 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b79af122-fba3-48cf-9020-58c994f9df0e",
+              "name": "post_id",
+              "value": "={{ 'POST-' + $now.format('yyyyMMdd-HHmmss') }}",
+              "type": "string"
+            },
+            {
+              "id": "2c25e9db-fafc-475b-8fc6-82d42af199a7",
+              "name": "title",
+              "value": "={{ $('🤖 Genius Astra Content Agent').item.json.output.title }}",
+              "type": "string"
+            },
+            {
+              "id": "38b8d015-eb15-4397-b8ba-6f7e810c79ac",
+              "name": "description",
+              "value": "={{ $('🤖 Genius Astra Content Agent').item.json.output.description }}",
+              "type": "string"
+            },
+            {
+              "id": "50953655-0281-4452-bb33-73ca639a6067",
+              "name": "image_url",
+              "value": "={{ $('TemplatedAI').item.json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "cdf26015-4db9-48c0-9820-ff2311534f52",
+              "name": "canva_title",
+              "value": "={{ $('🤖 Genius Astra Content Agent').item.json.output.canva_title }}",
+              "type": "string"
+            },
+            {
+              "id": "073c0c69-65e1-4f9a-a47a-6642a61e30d4",
+              "name": "canva_body",
+              "value": "={{ $('🤖 Genius Astra Content Agent').item.json.output.canva_body }}",
+              "type": "string"
+            },
+            {
+              "id": "ada78265-0cee-4c91-b93d-d96b25132bf7",
+              "name": "Hashtags",
+              "value": "={{ $('🤖 Genius Astra Content Agent').item.json.output.hashtags }}",
+              "type": "string"
+            },
+            {
+              "id": "04b935a4-5887-4598-ae66-bab6dd5d371e",
+              "name": "subscriber_id",
+              "value": "1194285933",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        8224,
+        1184
+      ],
+      "id": "bf02cc83-d5f0-4484-890f-51ff4054f7dc",
+      "name": "Set Post Data"
+    },
+    {
+      "parameters": {
+        "sendTo": "Phoenixtec0@gmail.com",
+        "subject": "=🎨 Nuevo Post Listo para Revisión — {{ $('Set Post Data').item.json.post_id }}",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; padding: 20px; border-radius: 10px;\">\n\n  <h2 style=\"color: #4A90E2; border-bottom: 2px solid #4A90E2; padding-bottom: 10px;\">\n    🤖 Genius Astra — Post Listo para Revisión\n  </h2>\n\n  <table style=\"width:100%; background:#fff; border-radius:8px; padding:16px; margin-bottom:16px;\">\n    <tr>\n      <td style=\"color:#888; width:120px;\"><strong>Post ID</strong></td>\n      <td>{{ $('Set Post Data').item.json.post_id }}</td>\n    </tr>\n    <tr>\n      <td style=\"color:#888;\"><strong>Fecha</strong></td>\n      <td>{{ $now.format('dd/MM/yyyy HH:mm') }}</td>\n    </tr>\n  </table>\n\n  <h3 style=\"color:#333;\">📌 Título</h3>\n  <p style=\"background:#fff; padding:12px; border-left:4px solid #4A90E2; border-radius:4px;\">\n    {{ $('Set Post Data').item.json.title }}\n  </p>\n\n  <h3 style=\"color:#333;\">📝 Caption</h3>\n  <p style=\"background:#fff; padding:12px; border-left:4px solid #F5A623; border-radius:4px; white-space:pre-line;\">\n    {{ $('Set Post Data').item.json.description }}\n  </p>\n\n  <h3 style=\"color:#333;\">🏷️ Hashtags</h3>\n  <p style=\"background:#fff; padding:12px; border-left:4px solid #7ED321; border-radius:4px;\">\n  {{ $('🤖 Genius Astra Content Agent').item.json.output.hashtags }}\n  </p>\n\n  <h3 style=\"color:#333;\">🖼️ Vista Previa</h3>\n  <img src=\"{{ $('Set Post Data').item.json.image_url }}\" width=\"100%\" style=\"border-radius:8px; margin-bottom:20px;\" />\n\n  <h3 style=\"color:#333; text-align:center;\">¿Apruebas este post?</h3>\n\n  <div style=\"text-align:center; margin:24px 0;\">\n    <a href=\"https://solubly-penceless-ellis.ngrok-free.dev/webhook-test/APPROVE?post_id{{ $('Set Post Data').item.json.post_id }}&action=APPROVE\" style=\"background:#28a745; color:#fff; padding:10px 24px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:bold; margin-right:8px;\">\n      ✅ APROBAR\n    </a>\n    &nbsp;&nbsp;\n    <a href=\"https://solubly-penceless-ellis.ngrok-free.dev/webhook-test/APPROVE?post_id{{ $('Set Post Data').item.json.post_id }}&action=REJECT\" style=\"background:#dc3545; color:#fff; padding:10px 24px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:bold;\">\n      ❌ RECHAZAR\n    </a>\n  </div>\n\n  <hr style=\"border:none; border-top:1px solid #eee; margin:30px 0;\" />\n\n  <p style=\"color:#555; font-size:13px;\">\n    Si necesitas revisar otro detalle no dudes en comunicarte con nosotros. ¡Que tengas un buen día!\n  </p>\n\n  <table style=\"width:100%; margin-top:10px;\">\n    <tr>\n      <td>\n        <p style=\"margin:0; font-size:13px; color:#333;\"><strong>Arista Assistant</strong> — Poster Team</p>\n        <p style=\"margin:0; font-size:13px; color:#333;\"><strong>Genius Astra</strong> | OTUN CORP</p>\n        <p style=\"margin:0; font-size:11px; color:#aaa;\">© All rights reserved - 2026</p>\n      </td>\n    </tr>\n  </table>\n\n</div>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        8624,
+        1184
+      ],
+      "id": "604f480a-130e-440d-a4cb-d97c5df82129",
+      "name": "Notify approval",
+      "webhookId": "b41bb753-3264-4100-8583-abbbffb031a8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rGsdLu9a3bbdpBQ9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY",
+          "mode": "list",
+          "cachedResultName": "Genius Astra Posts ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1611598867,
+          "mode": "list",
+          "cachedResultName": "data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit#gid=1611598867"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Post_id": "={{ $json.post_id }}",
+            "Title": "={{ $json.title }}",
+            "Description": "={{ $json.description }}",
+            "Image_url": "={{ $json.image_url }}",
+            "Hashtags": "={{ $json.Hashtags }}",
+            "Status": "IN PROGRESS"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Post_id",
+              "displayName": "Post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hashtags",
+              "displayName": "Hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_url",
+              "displayName": "Image_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        8448,
+        1184
+      ],
+      "id": "176a220b-982c-4a55-acb1-854925d2a0a4",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZVkYY5blo2ajMfxn",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        6992,
+        1680
+      ],
+      "id": "f29672db-67b5-4b02-a01b-ca4988782d6e",
+      "name": "OpenAI Embeddings1",
+      "credentials": {
+        "openAiApi": {
+          "id": "6oB1WcrnL1nJ1HjL",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Embeddings": {
+      "ai_embedding": [
+        []
+      ]
+    },
+    "🕓 Schedule — Every 3 Days 4AM": {
+      "main": [
+        [
+          {
+            "node": "🤖 Genius Astra Content Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🤖 Genius Astra Content Agent": {
+      "main": [
+        [
+          {
+            "node": "💾 Save Post to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI GPT-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "🤖 Genius Astra Content Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📚 Brand Memory (Pinecone)": {
+      "ai_tool": [
+        [
+          {
+            "node": "🤖 Genius Astra Content Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💾 Save Post to Sheets": {
+      "main": [
+        [
+          {
+            "node": "TemplatedAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⏳ Wait 8s for Canva": {
+      "main": [
+        [
+          {
+            "node": "Set Post Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📚 Memory Search (Chat Agent)": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Embeddings (Chat)": {
+      "ai_embedding": [
+        [
+          {
+            "node": "📚 Memory Search (Chat Agent)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "🤖 Genius Astra Content Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model in Perplexity": {
+      "ai_tool": [
+        [
+          {
+            "node": "🤖 Genius Astra Content Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader1": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader1",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TemplatedAI": {
+      "main": [
+        [
+          {
+            "node": "⏳ Wait 8s for Canva",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Post Data": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Embeddings1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "📚 Brand Memory (Pinecone)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Notify approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "52a345a7-4aea-40e2-b863-13d92ce489d8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "747783bda3f10a4d4023457d44f25ea0576e9cc9460c72700a587b2653a24d87"
+  },
+  "id": "MkmHZasmaMHPRPDIZLVr2",
+  "tags": []
+}
