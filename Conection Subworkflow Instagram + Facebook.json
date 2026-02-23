@@ -1,0 +1,763 @@
+{
+  "name": "Conection Subworkflow Instagram + Facebook",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<div style=\"font-family:Arial; text-align:center; padding:40px;\"><h2>={{ $json.query.action === 'APPROVE' ? '✅ Post Aprobado' : '❌ Post Rechazado' }}</h2><p>Post ID: {{ $json.query.post_id }}</p><p>Puedes cerrar esta ventana.</p></div>",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -32,
+        320
+      ],
+      "id": "a185208e-814d-4606-b45d-4e55aa277506",
+      "name": "📨 Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY",
+          "mode": "list",
+          "cachedResultName": "Genius Astra Posts ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1611598867,
+          "mode": "list",
+          "cachedResultName": "data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit#gid=1611598867"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Post_id",
+              "lookupValue": "={{ $('🌐 Webhook Approval').item.json.query.post_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        176,
+        320
+      ],
+      "id": "36c0cc23-af63-4cbc-b2d6-38498b3d4434",
+      "name": "📊 Get Post Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZVkYY5blo2ajMfxn",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "approve-check",
+              "leftValue": "={{ $('🌐 Webhook Approval').item.json.query.action }}",
+              "rightValue": "APPROVE",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        320
+      ],
+      "id": "93e3854a-3f0d-4324-9a20-283f57852a7b",
+      "name": "🔀 APPROVED or REJECTED?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY",
+          "mode": "list",
+          "cachedResultName": "Genius Astra Posts ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1611598867,
+          "mode": "list",
+          "cachedResultName": "data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit#gid=1611598867"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "SUCCESS",
+            "Post_id": "={{ $('📊 Get Post Data').first().json.Post_id }}"
+          },
+          "matchingColumns": [
+            "Post_id"
+          ],
+          "schema": [
+            {
+              "id": "Post_id",
+              "displayName": "Post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hashtags",
+              "displayName": "Hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image_url",
+              "displayName": "Image_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1312,
+        176
+      ],
+      "id": "c6b767ba-8f88-4af0-a625-880b1b799c9c",
+      "name": "✅ Update Status: Published",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZVkYY5blo2ajMfxn",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "Phoenixtec0@gmail.com",
+        "subject": "=✅ Post PUBLICADO — Genius Astra |  {{ $('🌐 Webhook Approval').item.json.query.post_id }}",
+        "message": "=<div style=\"font-family:Arial; max-width:600px; margin:0 auto; padding:20px;\"><h2 style=\"color:#28a745;\">✅ Post Publicado Exitosamente</h2><p><strong>Post ID:</strong> {{ $('🌐 Webhook Approval').item.json.query.post_id }}</p><p><strong>Título:{{ $('🧹 Clean Post Data').item.json.Title }}</strong> </p><p><strong>Caption:</strong><br>{{ $('🧹 Clean Post Data').item.json.Description }}</p><p><strong>Hashtags:</strong> {{ $('🧹 Clean Post Data').item.json.Hashtags }}</p><img src=\"{{ $('🧹 Clean Post Data').item.json.Image_url }}\" width=\"100%\" style=\"border-radius:8px;\"/><p>— Genius Astra Automation Engine 🤖</p></div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1392,
+        384
+      ],
+      "id": "5cf406d6-896b-4466-a3fa-9f7318bdd5b1",
+      "name": "📧 Gmail — Confirm Published",
+      "webhookId": "0ae1d26b-011d-452f-9e20-80cc062884dc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rGsdLu9a3bbdpBQ9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY",
+          "mode": "list",
+          "cachedResultName": "Genius Astra Posts ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1611598867,
+          "mode": "list",
+          "cachedResultName": "data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BNmL_MguLhmqaJOimfXh53tEFqhmDG95-Gas482A8rY/edit#gid=1611598867"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Post_id": "={{ $('📊 Get Post Data').item.json.Post_id }}",
+            "Status": "REFUSED"
+          },
+          "matchingColumns": [
+            "Post_id"
+          ],
+          "schema": [
+            {
+              "id": "Post_id",
+              "displayName": "Post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hashtags",
+              "displayName": "Hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image_url",
+              "displayName": "Image_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        608,
+        512
+      ],
+      "id": "f8c50f7d-6074-4f58-985c-e49333027033",
+      "name": "❌ Update Status: Rejected",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZVkYY5blo2ajMfxn",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "Phoenixtec0@gmail.com",
+        "subject": "=❌ Post RECHAZADO — Genius Astra | {{ $json.Post_id }}",
+        "message": "=<div style=\"font-family:Arial; max-width:600px; margin:0 auto; padding:20px;\"><h2 style=\"color:#dc3545;\">❌ Post Rechazado — Necesita Revisión</h2><p><strong>Post ID:\n{{ $('🌐 Webhook Approval').item.json.query.post_id }}\n</strong> </p><p><strong>Título:</strong> {{ $('📊 Get Post Data').item.json.Title }}</p><p><strong>Caption:</strong><br>{{ $('📊 Get Post Data').item.json.Description }}</p><p><strong>Hashtags:</strong> {{ $('📊 Get Post Data').item.json.Hashtags }}</p><img src=\"{{ $('📊 Get Post Data').item.json.Image_url }}\" width=\"100%\" style=\"border-radius:8px;\"/><p><em>Post guardado en Google Sheets con status: rejected_needs_revision.</em></p><p>— Genius Astra Automation Engine 🤖</p></div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        512
+      ],
+      "id": "baaaef7e-4245-4137-a095-ed79eb26f42a",
+      "name": "📧 Gmail — Notify Rejection",
+      "webhookId": "a627a200-a9ff-414e-84e2-1ad7485a2e43",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rGsdLu9a3bbdpBQ9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"pageContent\": \"={{ 'POST PUBLISHED: ' + $('🧹 Clean Post Data').item.json.Title + ' | Date: ' + $now.toISO() }}\",\n  \"type\": \"published_post\",\n  \"date\": \"={{ $now.toISO() }}\",\n  \"post_id\": \"={{ $('🌐 Webhook Approval').item.json.query.post_id }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1536,
+        336
+      ],
+      "id": "5b6cc5fa-327b-4421-8086-523e50a73414",
+      "name": "📝 Prepare Memory Document"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "personal",
+          "mode": "list",
+          "cachedResultName": "personal"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.1,
+      "position": [
+        1728,
+        336
+      ],
+      "id": "11073c15-82b0-4803-98d8-c339bbd96e68",
+      "name": "🧠 Store Post in Memory",
+      "credentials": {
+        "pineconeApi": {
+          "id": "CcI1VTfhQkX1kB6q",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1648,
+        672
+      ],
+      "id": "cfeea45e-2a24-44a2-80d2-de6307bb4947",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "6oB1WcrnL1nJ1HjL",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1856,
+        560
+      ],
+      "id": "ff9f9f3b-d5ee-4917-b15e-023d00f650bb",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "content": "## 🟢 PHASE 6 — WHATSAPP CONVERSATIONAL AI AGENT\nWebhook listens to incoming WhatsApp messages.\nAgent with vector memory can:\n• Answer questions about pending posts\n• Suggest new content ideas\n• Generate alternative post versions\n• Approve/Reject posts via chat command",
+        "height": 256,
+        "width": 560,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fd233d23-224c-4aa2-8316-ce971e1fb8fc",
+      "name": "Note Phase 6"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n \"facebook\": \"699b5ea18ab8ae478b3ceae3\",\n \"facebook_page_id\": \"61585073977460\",\n \"instagram\": \"699ba8398ab8ae478b3d72e8\",\n \"linkedin\": \"697ab30077637c5c857cb6a1\"\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        304
+      ],
+      "id": "0713d0e0-2b10-478a-88d1-6d3853e6e79b",
+      "name": "ID Get Late Accounts"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://getlate.dev/api/v1/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_d3ef8bc8567e17cbff454b8ae1b6c88ab510f2ba5b239573d8c6545d8f12e53b"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"{{ $json.Title }}{{ $json.Description }}{{ $json.Hashtags}}\",\n  \"mediaItems\": [\n    { \"url\": \"{{ $('ID Get Late Accounts').item.json.Image_url }}\", \"type\": \"image\" }\n  ],\n  \"platforms\": [\n    { \"platform\": \"facebook\", \"accountId\": \"{{ $('ID Get Late Accounts').item.json.facebook }}\" }\n  ],\n  \"tiktokSettings\": {\n    \"privacy_level\": \"PUBLIC_TO_EVERYONE\",\n    \"allow_comment\": true,\n    \"allow_duet\": true,\n    \"allow_stitch\": true,\n    \"content_preview_confirmed\": true,\n    \"express_consent_given\": true,\n    \"video_made_with_ai\": true\n  },\n  \"publishNow\": true\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1072,
+        384
+      ],
+      "id": "db0f8a0b-d2e1-4742-a619-f15c74df5faf",
+      "name": "📘 Post to Facebook (Getlate)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\n\nreturn [{\n  json: {\n    Post_id: item.Post_id,\n    Title: item.Title,\n    Description: item.Description\n      .replace(/\\\\n/g, ' ')\n      .replace(/\\n/g, ' ')\n      .trim(),\n    Hashtags: item.Hashtags,\n    Image_url: item.Image_url,\n    Status: item.Status\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        224
+      ],
+      "id": "8cc3aa95-3d68-4ad9-ac0e-bba3cd374816",
+      "name": "🧹 Clean Post Data"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://getlate.dev/api/v1/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_d3ef8bc8567e17cbff454b8ae1b6c88ab510f2ba5b239573d8c6545d8f12e53b"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"{{ $json.Title }}{{ $json.Description }}{{ $json.Hashtags }}\",\n  \"mediaItems\": [\n    { \"url\": \"{{ $json.Image_url }}\", \"type\": \"image\" }\n  ],\n  \"platforms\": [\n    { \"platform\": \"instagram\", \"accountId\": \"{{ $('ID Get Late Accounts').first().json.instagram }}\" \n}\n  ],\n  \"publishNow\": true\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1088,
+        176
+      ],
+      "id": "177b2437-a678-44e6-81ca-4fd4246c3fc4",
+      "name": "📸 Post to Instagram (Getlate)1"
+    },
+    {
+      "parameters": {
+        "path": "approve",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -240,
+        320
+      ],
+      "id": "3ef97d77-b176-4999-a6e6-b48e0c7cd77d",
+      "name": "🌐 Webhook Approval",
+      "webhookId": "ffc4f4d1-a99a-40af-b330-dab3520e17e9"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "📨 Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "📊 Get Post Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Get Post Data": {
+      "main": [
+        [
+          {
+            "node": "🔀 APPROVED or REJECTED?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔀 APPROVED or REJECTED?": {
+      "main": [
+        [
+          {
+            "node": "ID Get Late Accounts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "❌ Update Status: Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📧 Gmail — Confirm Published": {
+      "main": [
+        [
+          {
+            "node": "📝 Prepare Memory Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "❌ Update Status: Rejected": {
+      "main": [
+        [
+          {
+            "node": "📧 Gmail — Notify Rejection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📝 Prepare Memory Document": {
+      "main": [
+        [
+          {
+            "node": "🧠 Store Post in Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "🧠 Store Post in Memory",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "🧠 Store Post in Memory",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ID Get Late Accounts": {
+      "main": [
+        [
+          {
+            "node": "🧹 Clean Post Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📘 Post to Facebook (Getlate)": {
+      "main": [
+        [
+          {
+            "node": "📧 Gmail — Confirm Published",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧹 Clean Post Data": {
+      "main": [
+        [
+          {
+            "node": "📘 Post to Facebook (Getlate)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📸 Post to Instagram (Getlate)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📸 Post to Instagram (Getlate)1": {
+      "main": [
+        [
+          {
+            "node": "✅ Update Status: Published",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🌐 Webhook Approval": {
+      "main": [
+        [
+          {
+            "node": "📨 Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "0adba6b7-e923-483e-814c-fd8f7bfc8fc4",
+  "meta": {
+    "instanceId": "747783bda3f10a4d4023457d44f25ea0576e9cc9460c72700a587b2653a24d87"
+  },
+  "id": "jsytNDl0u8n6UwO6",
+  "tags": [
+    {
+      "updatedAt": "2026-01-26T01:49:01.316Z",
+      "createdAt": "2026-01-26T01:49:01.316Z",
+      "id": "IQSHOhzggibPnE2R",
+      "name": "ai-content-generation"
+    }
+  ]
+}
